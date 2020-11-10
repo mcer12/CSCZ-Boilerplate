@@ -1,10 +1,10 @@
 # CSCZ-Boilerplate
-### Our take on (now abandoned) CS-Cart Boilerplate theme based on HTML5 Twitter Bootstrap 3
+### Our take on (now abandoned) CS-Cart Boilerplate theme
 
 Notable differences from original Boilerplate:
 - Theme uses SCSS instead of LESS
 - Uses NPM + Gulp for precompiling, supports browser Livereload
-- Uses Bootstrap 4 instead of 3
+- Uses Bootstrap 4 instead of BS3
 - Uses Swiper for banner / product sliders
 
 This theme is, just like the original Boilerplate, meant for development. The goal is for it to be fully compatible with latest versions of CS-Cart (currently version 4.x). Keep an eye on the repository, there should be a usable release soon together with an example child theme.
