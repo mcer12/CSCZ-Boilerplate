@@ -1,0 +1,9 @@
+{
+    "title": "CSCZ Boilerplate - Child Theme",
+    "description": "Custom child theme for your project",
+    "logo": "media/images/logos/logo.png",
+    "mail": "media/images/logos/logo.png",
+    "developer": "CS-Cart Česky",
+    "favicon": "media/images/icons/favicon.ico",
+    "parent_theme": "cscz-boilerplate"
+}
