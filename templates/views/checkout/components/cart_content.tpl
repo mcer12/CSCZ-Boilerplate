@@ -1,60 +1,62 @@
-{assign var="result_ids" value="cart_items,checkout_totals,checkout_steps,cart_status*,checkout_cart"}
+{assign var="result_ids" value="cart*,checkout*"}
 
-<form name="checkout_form" class="cm-check-changes" action="{""|fn_url}" method="post" enctype="multipart/form-data">
-  <input type="hidden" name="redirect_mode" value="cart" />
-  <input type="hidden" name="result_ids" value="{$result_ids}" />
+<form name="checkout_form" class="cm-check-changes cm-ajax cm-ajax-full-render" action="{""|fn_url}" method="post" enctype="multipart/form-data" id="checkout_form">
+<input type="hidden" name="redirect_mode" value="cart" />
+<input type="hidden" name="result_ids" value="{$result_ids}" />
 
-  <h2 class="mainbox-title">{__("cart_contents")}</h2>
+<h1 class="ty-mainbox-title">{__("cart_contents")}</h1>
 
-  <div class="panel panel-default cart-content-top-buttons">
-      <div class="panel-body">
-          <div class="pull-left cart-content-left-buttons">
-              {include file="common/button.tpl" href=$continue_url|fn_url text=__("continue_shopping")}
-              {include file="common/button.tpl" text=__("clear_cart") href="checkout.clear" meta="cm-confirm btn-default"}
-          </div>
-          <div class="pull-right cart-content-right-buttons">
-              {include file="common/button.tpl" id="button_cart" name="dispatch[checkout.update]" text=__("recalculate") meta="btn-default"}
+<div class="buttons-container ty-cart-content__top-buttons clearfix">
+    <div class="ty-float-left ty-cart-content__left-buttons">
+        {hook name="checkout:cart_content_top_left_buttons"}
+            {include file="buttons/continue_shopping.tpl" but_href=$continue_url|fn_url }
+        {/hook}
+    </div>
+    <div class="ty-float-right ty-cart-content__right-buttons">
+        {hook name="checkout:cart_content_top_right_buttons"}
+            {include file="buttons/update_cart.tpl"
+                     but_id="button_cart"
+                     but_meta="ty-btn--recalculate-cart hidden hidden-phone hidden-tablet"
+                     but_name="dispatch[checkout.update]"
+            }
+            {if $payment_methods}
+                {include file="buttons/proceed_to_checkout.tpl"}
+            {/if}
+        {/hook}
+    </div>
+</div>
 
-              {if $payment_methods}
-                  {assign var="m_name" value="checkout"}
-                  {assign var="link_href" value="checkout.checkout"}
-                  {include file="common/button.tpl" text=__("proceed_to_checkout") href=$link_href meta="btn-primary"}
-              {/if}
-          </div>
-      </div>
-  </div>
+{include file="views/checkout/components/cart_items.tpl" disable_ids="button_cart"}
 
-  {include file="views/checkout/components/cart_items.tpl" disable_ids="button_cart"}
-
-</form>
+<!--checkout_form--></form>
 
 {include file="views/checkout/components/checkout_totals.tpl" location="cart"}
 
-<div class="panel panel-default cart-content-bottom-buttons clearfix">
-    <div class="panel-body">
-        <div class="pull-left cart-content-left-buttons">
-            {include file="common/button.tpl" href=$continue_url|fn_url text=__("continue_shopping")}
-        </div>
-        <div class="pull-right cart-content-right-buttons">
-            {include file="common/button.tpl" external_click_id="button_cart" text=__("recalculate") meta="btn-default cm-external-click" as="link"}
+<div class="buttons-container ty-cart-content__bottom-buttons clearfix">
+    <div class="ty-float-left ty-cart-content__left-buttons">
+        {hook name="checkout:cart_content_bottom_left_buttons"}
+            {include file="buttons/continue_shopping.tpl" but_href=$continue_url|fn_url}
+            {include file="buttons/clear_cart.tpl" but_href="checkout.clear" but_role="text" but_meta="cm-confirm ty-cart-content__clear-button"}
+        {/hook}
+    </div>
+    <div class="ty-float-right ty-cart-content__right-buttons">
+        {hook name="checkout:cart_content_bottom_right_buttons"}
             {if $payment_methods}
-                {assign var="m_name" value="checkout"}
                 {assign var="link_href" value="checkout.checkout"}
-                {include file="common/button.tpl" text=__("proceed_to_checkout") href=$link_href meta="btn-primary"}
+                {include file="buttons/proceed_to_checkout.tpl"}
             {/if}
-        </div>
+        {/hook}
     </div>
 </div>
 {if $checkout_add_buttons}
-    <div class="cart-content-payment-methods" id="payment-methods">
-        <span class="cart-content-payment-methods-title payment-metgods-or">{__("or_use")}</span>
-        <table class="cart-content-payment-methods-block">
+    <div class="ty-cart-content__payment-methods payment-methods" id="payment-methods">
+        <span class="ty-cart-content__payment-methods-title payment-metgods-or">{__("or_use")}</span>
+        <table class="ty-cart-content__payment-methods-block">
             <tr>
                 {foreach from=$checkout_add_buttons item="checkout_add_button"}
-                    <td class="cart-content-payment-methods-item">{$checkout_add_button nofilter}</td>
+                    <td class="ty-cart-content__payment-methods-item">{$checkout_add_button nofilter}</td>
                 {/foreach}
             </tr>
-        </table>
-    <!--payment-methods-->
-    </div>
+    </table>
+    <!--payment-methods--></div>
 {/if}

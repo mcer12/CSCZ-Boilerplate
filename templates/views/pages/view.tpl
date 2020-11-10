@@ -1,4 +1,4 @@
-<div class="wysiwyg-content">
+<div class="page-content wysiwyg-content">
     {hook name="pages:page_content"}
     <div {live_edit name="page:description:{$page.page_id}"}>{$page.description nofilter}</div>
     {/hook}

@@ -10,46 +10,34 @@
 
 {if $show_place_order}
 
-    <div class="{if !$is_payment_step} checkout-block{/if}">
+    <div class="clearfix {if !$is_payment_step} checkout__block ty-checkout-block-terms{/if}">
         {hook name="checkout:final_section_customer_notes"}
-            {include file="views/checkout/components/customer_notes.tpl"}
         {/hook}
-        
-        {if !$suffix}
-            {assign var="suffix" value=""|uniqid}
-        {/if}
-        {include file="views/checkout/components/terms_and_conditions.tpl" suffix=$suffix}
     </div>
 
     <input type="hidden" name="update_steps" value="1" />
     
-    {if !$is_payment_step}
-        <div class="cm-checkout-place-order-buttons">
-            {include file="common/button.tpl" text=__("submit_my_order") name="dispatch[checkout.place_order]" id="place_order" meta="btn-primary cm-checkout-place-order"}
+    {if !$iframe_mode}
+        <div class="litecheckout__item litecheckout__item--full litecheckout__submit-order">
+            <button class="litecheckout__submit-btn btn btn-primary" type="submit" name="dispatch[checkout.place_order]" {if $but_onclick}onclick="{$but_onclick nofilter}"{/if} id="litecheckout_place_order">
+                {if !$but_text}
+                    {$but_text = __("place_an_order")}
+                {/if}
+                {$but_text nofilter}
+            </button>
         </div>
-
-        {if $recalculate && $cart.shipping_required}
-            <input type="hidden" name="next_step" value="step_two" />
-            <div class="cm-checkout-recalculate-buttons hidden">
-                {include file="common/button.tpl" meta="btn-defeault cm-checkout-recalculate" name="dispatch[checkout.update_steps]" text=__("recalculate_shipping_cost") as="link"}
-            </div>
-        {/if}
     {/if}
 
 {else}
 
-    {if $cart.shipping_failed}
-        <p class="alert alert-warning">{__("text_no_shipping_methods")}</p>
-    {/if}
-
     {if $cart.amount_failed}
-        <div class="checkout-block">
-            <p class="alert alert-warning">{__("text_min_order_amount_required")}&nbsp;<strong>{include file="common/price.tpl" value=$settings.General.min_order_amount}</strong></p>
+        <div class="checkout__block">
+            <p class="ty-error-text">{__("text_min_order_amount_required")}&nbsp;<strong>{include file="common/price.tpl" value=$settings.Checkout.min_order_amount}</strong></p>
         </div>
     {/if}
 
-    <div>
-        {include file="common/button.tpl" href=$continue_url|fn_url text=__("continue_shopping")}
+    <div class="litecheckout__item litecheckout__submit-order">
+        {include file="buttons/continue_shopping.tpl" but_href=$continue_url|fn_url but_role="action"}
     </div>
     
 {/if}

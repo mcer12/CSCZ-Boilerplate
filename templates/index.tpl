@@ -45,8 +45,9 @@
 {/capture}
 <title>{$smarty.capture.page_title|strip|trim nofilter}</title>
 {include file="meta.tpl"}
-<link href="{$logos.favicon.image.image_path|fn_query_remove:'t'}" rel="shortcut icon" type="{$logos.favicon.image.absolute_path|fn_get_mime_content_type}" />
-
+{hook name="index:links"}
+        <link href="{$self_images_dir}" rel="shortcut icon" type="{$logos.favicon.image.absolute_path|fn_get_mime_content_type}" />
+{/hook}
 {include file="common/styles.tpl"}
 
 {if "DEVELOPMENT"|defined && $smarty.const.DEVELOPMENT == true}
@@ -70,7 +71,20 @@ window.onerror = function(errorMessage) {
         <div class="page" id="tygh_container">
 
         <div id="ajax_overlay" class="ajax-overlay"></div>
-        <div id="ajax_loading_box" class="ajax-loading-box"></div>
+        <div id="ajax_loading_box" class="ajax-loading-box ajax-glass">
+                <div class="glass">
+                        <div class="cap-left"></div>
+                        <div class="cap-right"></div>
+                        <div class="fill">
+                                <div class="bubble-1"></div>
+                                <div class="bubble-2"></div>
+                                <div class="bubble-3"></div>
+                                <div class="bubble-4"></div>
+                                <div class="bubble-5"></div>
+                                <div class="bubble-6"></div>
+                        </div>
+                </div>
+        </div>
 
         {include file="common/notification.tpl"}
 

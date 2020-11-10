@@ -1,0 +1,32 @@
+// PRELOADER
+.ajax-loading-box {
+  position: fixed;
+  top: 50%;
+  right: 50%;
+  left: 50%;
+  z-index: 100001;
+  display: none;
+  overflow: visible;
+  margin-top: -26px;
+  margin-left: -26px;
+  padding: 0px;
+  min-height: 52px;
+  width: 52px;
+  background: url('../media/images/icons/ajax_loader.svg') no-repeat 10px 10px #fff;
+  font-size: 0;
+  color: transparent;
+  border-radius: 3px;
+  box-shadow: 0 0 100px rgba(0,0,0,.3);
+  opacity: 1;
+}
+
+.ajax-overlay {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10000;
+  display: none;
+  background: rgba(0,0,0,.25);
+}

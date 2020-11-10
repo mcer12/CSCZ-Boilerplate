@@ -1,3 +1,5 @@
+{* vypnuto *}
+{*
 {capture name="mailing_lists"}
     {assign var="show_newsletters_content" value=false}
     <div class="newsletters subscription-container" id="subsciption_{$tab_id}">
@@ -14,7 +16,6 @@
 {/capture}
 
 {if $show_newsletters_content}
-    <h4>{__("text_signup_for_subscriptions")}</h4>
-
     {$smarty.capture.mailing_lists nofilter}
 {/if}
+    *}

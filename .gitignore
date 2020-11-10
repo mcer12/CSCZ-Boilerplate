@@ -1,0 +1,6 @@
+# ignore npm plugins
+/gulp/node_modules/**
+
+# npm + gulp
+/node_modules/**
+/package-lock.json

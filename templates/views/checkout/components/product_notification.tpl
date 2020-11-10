@@ -1,22 +1,32 @@
+{hook name="product_notification:scripts"}
 {capture name="buttons"}
-    <div class="pull-left">
-        {include file="common/button.tpl" text=__("continue_shopping") meta="btn-default cm-notification-close"}
+    <div class="ty-float-left">
+        {include file="buttons/button.tpl" but_text=__("continue_shopping") but_meta="ty-btn__secondary cm-notification-close"}
     </div>
 
-    <div class="pull-right">
-        {if $settings.General.checkout_redirect == "Y"}
-            {include file="common/button.tpl" href="checkout.cart" text=__("view_cart") meta="btn-primary"}
-        {else}
-            {include file="common/button.tpl" href="checkout.checkout" text=__("checkout") meta="btn-primary"}
-        {/if}
+    <div class="ty-float-right">
+    {if $settings.Checkout.checkout_redirect == "Y"}
+        {include file="buttons/button.tpl" but_meta="ty-btn__primary" but_text=__("view_cart") but_href="checkout.cart"}
+    {else}
+        {include
+            file="buttons/proceed_to_checkout.tpl"
+            but_text=__("checkout")
+            but_meta="ty-btn__primary cm-notification-close"
+        }
+    {/if}
     </div>
+
 {/capture}
 {capture name="info"}
-    <div class="product-notification-total-info row clearfix">
-        <div class="product-notification-amount col-lg-6 col-md-6 col-sm-6 col-xs-6 text-left"> {__("items_in_cart", [$smarty.session.cart.amount])}</div>
-        <div class="product-notification-subtotal col-lg-6 col-md-6 col-sm-6 col-xs-6 text-right">
+    <div class="clearfix"></div>
+    <hr class="ty-product-notification__divider" />
+
+    <div class="ty-product-notification__total-info clearfix">
+        <div class="ty-product-notification__amount ty-float-left"> {__("items_in_cart", [$smarty.session.cart.amount])}</div>
+        <div class="ty-product-notification__subtotal ty-float-right">
             {__("cart_subtotal")} {include file="common/price.tpl" value=$smarty.session.cart.display_subtotal}
         </div>
     </div>
 {/capture}
 {include file="views/products/components/notification.tpl" product_buttons=$smarty.capture.buttons product_info=$smarty.capture.info}
+{/hook}

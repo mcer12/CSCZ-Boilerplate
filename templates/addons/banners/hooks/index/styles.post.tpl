@@ -1,1 +1,1 @@
-{style src="addons/banners/styles.less"}
+{*style src="addons/banners/styles.less"*}

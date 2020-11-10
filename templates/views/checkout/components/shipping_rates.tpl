@@ -1,154 +1,116 @@
-{if $show_header == true}
-    <h3>{__("select_shipping_method")}</h3>
-{/if}
-
-{if !$no_form}
-<form {if $use_ajax}class="cm-ajax"{/if} action="{""|fn_url}" method="post" name="shippings_form">
-    <input type="hidden" name="redirect_mode" value="checkout" />
-    {if $use_ajax}
-        <input type="hidden" name="result_ids" value="checkout_totals,checkout_steps" />
-    {/if}
-{/if}
-
+<div class="litecheckout__group litecheckout__shippings"
+     data-ca-lite-checkout-overlay-message="{__("lite_checkout.click_here_to_update_shipping")}"
+     data-ca-lite-checkout-overlay-class="litecheckout__overlay--active"
+     data-ca-lite-checkout-element="shipping-methods"
+     id="shipping_rates_list">
 {hook name="checkout:shipping_rates"}
-    {if $display == "show"}
-        <div class="step-complete-wrapper">
-    {/if}
-    <div id="shipping_rates_list">
-        {foreach from=$product_groups key="group_key" item=group name="spg"}
-            {* Group name *}
-            {if !"ULTIMATE"|fn_allowed_for || $product_groups|count > 1}
-                {$group.name}
-            {/if}
 
-            {* Products list *}
-            {if !"ULTIMATE"|fn_allowed_for || $product_groups|count > 1}
-                <ul class="list-unstyled">
-                    {foreach from=$group.products item="product"}
-                        {if !(($product.is_edp == 'Y' && $product.edp_shipping != 'Y') || $product.free_shipping == 'Y')}
-                            <li>
-                                {if $product.product}
-                                    {$product.product nofilter}
-                                {else}
-                                    {$product.product_id|fn_get_product_name}
-                                {/if}
-                            </li>
-                        {/if}
-                    {/foreach}
-                </ul>
-            {/if}
+    <input type="hidden"
+           name="additional_result_ids[]"
+           value="litecheckout_final_section,litecheckout_step_payment,checkout*"
+    />
 
+    {foreach $product_groups as $group_key => $group}
+        {if $product_groups|count > 1}
+            <div class="litecheckout__group">
+                <div class="litecheckout__item">
+                    <h2 class="litecheckout__step-title">
+                        {__("lite_checkout.shipping_method_for", ["[group_name]" => $group.name])}
+                    </h2>
+                </div>
+            </div>
+        {/if}
+
+        {hook name="checkout:shipping_methods_list"}
+        <div class="litecheckout__group">
             {* Shippings list *}
             {if $group.shippings && !$group.all_edp_free_shipping && !$group.shipping_no_required}
 
-                {if $display == "select"}
-                    <p>
-                        <select id="ssr_{$company_id}" name="shipping_ids[{$company_id}]" {if $onchange}onchange="{$onchange}"{/if}>
-                {/if}
+                {foreach $group.shippings as $shipping}
 
-                {foreach from=$group.shippings item="shipping"}
+                    {hook name="checkout:shipping_rate"}
+                        {$delivery_time = ""}
+                        {if $shipping.delivery_time || $shipping.service_delivery_time}
+                            {$delivery_time = "(`$shipping.service_delivery_time|default:$shipping.delivery_time`)"}
+                        {/if}
 
-                    {if $cart.chosen_shipping.$group_key == $shipping.shipping_id}
-                        {assign var="checked" value="checked=\"checked\""}
-                        {assign var="selected" value="selected=\"selected\""}
-                        {assign var="strong_begin" value="<strong>"}
-                        {assign var="strong_end" value="</strong>"}
-                    {else}
-                        {assign var="checked" value=""}
-                        {assign var="selected" value=""}
-                        {assign var="strong_begin" value=""}
-                        {assign var="strong_end" value=""}
-                    {/if}
-
-                    {if $shipping.delivery_time}
-                        {assign var="delivery_time" value="(`$shipping.delivery_time`)"}
-                    {else}
-                        {assign var="delivery_time" value=""}
-                    {/if}
-
-                    {if $shipping.rate}
-                        {capture assign="rate"}{include file="common/price.tpl" value=$shipping.rate}{/capture}
-                        {if $shipping.inc_tax}
-                            {assign var="rate" value="`$rate` ("}
-                            {if $shipping.taxed_price && $shipping.taxed_price != $shipping.rate}
-                                {capture assign="tax"}{include file="common/price.tpl" value=$shipping.taxed_price}{/capture}
-                                {assign var="rate" value="`$rate` (`$tax` "}
+                        {if $shipping.rate}
+                            {capture assign="rate"}{include file="common/price.tpl" value=$shipping.rate}{/capture}
+                            {if $shipping.inc_tax}
+                                {$rate = "`$rate` ("}
+                                {if $shipping.taxed_price && $shipping.taxed_price != $shipping.rate}
+                                    {capture assign="tax"}{include file="common/price.tpl" value=$shipping.taxed_price class="ty-nowrap"}{/capture}
+                                    {$rate = "`$rate``$tax` "}
+                                {/if}
+                                {$inc_tax_lang = __('inc_tax')}
+                                {$rate = "`$rate``$inc_tax_lang`)"}
                             {/if}
-                            {assign var="inc_tax_lang" value=__('inc_tax')}
-                            {assign var="rate" value="`$rate``$inc_tax_lang`)"}
-                        {/if}
-                    {else}
-                        {assign var="rate" value=__("free_shipping")}
-                    {/if}
-
-                    {hook name="checkout:shipping_method"}
-                        {if $display == "radio"}
-                            <label for="sh_{$group_key}_{$shipping.shipping_id}" class="control-label">
-                                <input type="radio" id="sh_{$group_key}_{$shipping.shipping_id}" name="shipping_ids[{$group_key}]" value="{$shipping.shipping_id}" onclick="fn_calculate_total_shipping_cost();" {$checked} />
-                                {$shipping.shipping} {$delivery_time}
-                                {if $rate !== "_free_shipping"} {$rate nofilter}{/if}
-                            </label>
-                            <hr>
-
-                        {elseif $display == "select"}
-                            <option value="{$shipping.shipping_id}" {$selected}>{$shipping.shipping} {$delivery_time} - {$rate nofilter}</option>
-
-                        {elseif $display == "show"}
-                            <p>
-                                {$strong_begin}{$rate.name} {$delivery_time} - {$rate nofilter}{$strong_begin}
-                            </p>
-                        {/if}
-                        {if $shipping.description}
-                            <div class="ty-checkout__shipping-tips">
-                                <p>{$shipping.description nofilter}</p>
-                            </div>
+                        {elseif fn_is_lang_var_exists("free")}
+                            {$rate = __("free")}
+                        {else}
+                            {$rate = ""}
                         {/if}
                     {/hook}
 
+                    <div class="litecheckout__shipping-method litecheckout__field litecheckout__field--xsmall">
+                        <input
+                            type="radio"
+                            class="litecheckout__shipping-method__radio hidden"
+                            id="sh_{$group_key}_{$shipping.shipping_id}"
+                            name="shipping_ids[{$group_key}]"
+                            value="{$shipping.shipping_id}"
+                            onclick="fn_calculate_total_shipping_cost(); $.ceLiteCheckout('toggleAddress', {if $shipping.is_address_required == "Y"}true{else}false{/if});"
+                            data-ca-lite-checkout-element="shipping-method"
+                            data-ca-lite-checkout-is-address-required="{if $shipping.is_address_required == "Y"}true{else}false{/if}"
+                            {if $cart.chosen_shipping.$group_key == $shipping.shipping_id}checked{/if}
+                        />
+
+                        <label
+                            for="sh_{$group_key}_{$shipping.shipping_id}"
+                            class="litecheckout__shipping-method__wrapper js-litecheckout-activate"
+                            data-ca-activate="sd_{$group_key}_{$shipping.shipping_id}"
+                        >
+                            {if $shipping.image}
+                                <div class="litecheckout__shipping-method__logo">
+                                    {include file="common/image.tpl" obj_id=$shipping_id images=$shipping.image class="shipping-method__logo-image litecheckout__shipping-method__logo-image"}
+                                </div>
+                            {/if}
+                            <p class="litecheckout__shipping-method__title">{$shipping.shipping}{if $rate} — {$rate nofilter}{/if}</p>
+                            <p class="litecheckout__shipping-method__delivery-time">{$delivery_time}</p>
+                        </label>
+                    </div>
                 {/foreach}
-
-                {if $display == "select"}
-                        </select>
-                    <p>
-                {/if}
-
-                {if $smarty.foreach.spg.last && !$group.all_edp_free_shipping && !$group.shipping_no_required}
-                    <p>{__("total")}:&nbsp;{include file="common/price.tpl" value=$cart.display_shipping_cost }</p>
-                {/if}
-
             {else}
-                {if $group.all_free_shipping}
-                     <p>{__("free_shipping")}</p>
-                {elseif $group.all_edp_free_shipping || $group.shipping_no_required }
-                    <p>{__("no_shipping_required")}</p>
-                {else}
-                    {if $display == "show"}
-                        <strong>{__("text_no_shipping_methods")}</strong>
+                <p class="litecheckout__shipping-method__text">
+                    {if $group.all_free_shipping}
+                        {__("free_shipping")}
+                    {elseif $group.all_edp_free_shipping || $group.shipping_no_required }
+                        {__("no_shipping_required")}
                     {else}
-                        {__("text_no_shipping_methods")}
+                        <span class="ty-error-text">
+                            {__("text_no_shipping_methods")}
+                        </span>
                     {/if}
-                {/if}
+                </p>
             {/if}
+        </div>
+        {/hook}
 
-        {foreachelse}
-            <p>
-                {if !$cart.shipping_required}
-                    {__("no_shipping_required")}
-                {elseif $cart.free_shipping}
-                    {__("free_shipping")}
-                {/if}
-            </p>
-        {/foreach}
-
-<!--shipping_rates_list--></div>
-
-{if $display == "show"}
-    </div>
-{/if}
-
+        <div class="litecheckout__group">
+            {foreach $group.shippings as $shipping}
+                {hook name="checkout:shipping_method"}
+                {/hook}
+            {/foreach}
+            <div class="litecheckout__item">
+                {foreach $group.shippings as $shipping}
+                    {if $cart.chosen_shipping.$group_key == $shipping.shipping_id}
+                        <div class="litecheckout__shipping-method__description">
+                            {$shipping.description nofilter}
+                        </div>
+                    {/if}
+                {/foreach}
+            </div>
+        </div>
+    {/foreach}
 {/hook}
-
-{if !$no_form}
-    <div class="cm-noscript buttons-container text-center">{include file="common/button.tpl" name="dispatch[checkout.update_shipping]" text=__("select")}</div>
-</form>
-{/if}
+<!--shipping_rates_list--></div>

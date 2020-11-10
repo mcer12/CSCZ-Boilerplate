@@ -1,10 +1,20 @@
 {include file="views/profiles/components/profiles_scripts.tpl"}
 
+{$dispatch = "profiles.update"}
+
+{if $runtime.action}
+    {$dispatch = "profiles.update.{$runtime.action}"}
+{/if}
+
+
 {if $runtime.mode == "add" && $settings.General.quick_registration == "Y"}
     <div class="account">
-    
-        <form name="profiles_register_form" action="{""|fn_url}" method="post">
+
+        <form name="profiles_register_form" enctype="multipart/form-data" action="{""|fn_url}" method="post">
+            <input class="" type="hidden" name="ship_to_another" value="0">
+
             {include file="views/profiles/components/profile_fields.tpl" section="C" nothing_extra="Y"}
+            {include file="views/profiles/components/profile_fields.tpl" section="B" nothing_extra="Y"}
             {include file="views/profiles/components/profiles_account.tpl" nothing_extra="Y" location="checkout"}
 
             {hook name="profiles:account_update"}
@@ -17,7 +27,7 @@
             </div>
             {/if}
 
-            
+
             <div class="buttons-container panel panel-default">
                 <div class="panel-body">
                     {include file="common/button.tpl" text=__("register") name="dispatch[profiles.update]" meta="btn btn-primary"}
@@ -41,7 +51,7 @@
                     {if $profile_fields.B || $profile_fields.S}
                         {if $settings.General.user_multiple_profiles == "Y" && $runtime.mode == "update"}
                             <p>{__("text_multiprofile_notice")}</p>
-                            {include file="views/profiles/components/multiple_profiles.tpl" profile_id=$user_data.profile_id}    
+                            {include file="views/profiles/components/multiple_profiles.tpl" profile_id=$user_data.profile_id}
                         {/if}
 
                         {if $settings.Checkout.address_position == "billing_first"}
@@ -57,7 +67,7 @@
                             {assign var="sec_section_text" value=__("billing_address")}
                             {assign var="body_id" value="ba"}
                         {/if}
-                        
+
                         {include file="views/profiles/components/profile_fields.tpl" section=$first_section body_id="" ship_to_another=true title=$first_section_text}
                         {include file="views/profiles/components/profile_fields.tpl" section=$sec_section body_id=$body_id ship_to_another=true title=$sec_section_text address_flag=$profile_fields|fn_compare_shipping_billing ship_to_another=$ship_to_another}
                     {/if}
@@ -69,7 +79,7 @@
 
                 {/capture}
                 {$smarty.capture.group nofilter}
-                
+
                 <div class="buttons-container panel panel-default">
                     <div class="panel-body">
                         {if $runtime.mode == "add"}
@@ -93,7 +103,7 @@
                 </div>
             </form>
         </div>
-        
+
         {capture name="additional_tabs"}
             {if $runtime.mode == "update"}
                 {if !"ULTIMATE:FREE"|fn_allowed_for}

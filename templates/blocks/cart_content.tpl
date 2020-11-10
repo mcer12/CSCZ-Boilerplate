@@ -1,8 +1,9 @@
 {assign var="dropdown_id" value=$block.snapping_id}
 {assign var="r_url" value=$config.current_url|escape:url}
 {hook name="checkout:cart_content"}
+
 <div class="dropdown cart-dropdown" id="cart_status_{$dropdown_id}">
-    <span class="btn btn-default dropdown-toggle" type="button" id="cart_dropdown_{$dropdown_id}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+    <button class="btn btn-default dropdown-toggle" type="button" id="cart_dropdown_{$dropdown_id}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
     {hook name="checkout:dropdown_title"}
         {if $smarty.session.cart.amount}
             <i class="glyphicon glyphicon-shopping-cart fa fa-shopping-cart filled"></i>
@@ -14,9 +15,9 @@
             <span class="caret"></span>
         {/if}
     {/hook}
-    </span>
+    </button>
 
-    <ul aria-labelledby="cart_dropdown_{$dropdown_id}" class="cm-cart-content dropdown-menu dropdown-menu-right {if $block.properties.products_links_type == "thumb"}cm-cart-content-thumb{/if} {if $block.properties.display_delete_icons == "Y"}cm-cart-content-delete{/if}">
+    <div aria-labelledby="cart_dropdown_{$dropdown_id}" class="cm-cart-content dropdown-menu dropdown-menu-right {if $block.properties.products_links_type == "thumb"}cm-cart-content-thumb{/if} {if $block.properties.display_delete_icons == "Y"}cm-cart-content-delete{/if}">
         {hook name="checkout:minicart"}
         {if $smarty.session.cart.amount}
             {hook name="index:cart_status"}
@@ -24,7 +25,7 @@
             {foreach from=$_cart_products key="key" item="product" name="cart_products"}
                 {hook name="checkout:minicart_product"}
                 {if !$product.extra.parent}
-                    <li>
+                    <div>
                         <div class="media">
                             {hook name="checkout:minicart_product_info"}
                             {if $block.properties.products_links_type == "thumb"}
@@ -50,30 +51,30 @@
                             {/if}
                             {/hook}
                         </div>
-                    </li>
-                    <li role="separator" class="divider"></li>
+                    </div>
+                    <div role="separator" class="divider"></div>
                 {/if}
                 {/hook}
             {/foreach}
             {/hook}
         {else}
-            <li>
+            <div>
                 <div class="buttons text-center text-muted">
                     <span>{__("cart_is_empty")}</span>
                 </div>
-            </li>
+            </div>
         {/if}
         {if $block.properties.display_bottom_buttons == "Y" && $smarty.session.cart.amount}
-            <li class="cm-cart-buttons">
+            <div class="cm-cart-buttons">
                 <div class="buttons">
                     <a href="{"checkout.cart"|fn_url}" rel="nofollow" class="btn btn-default">{__("view_cart")}</a>
                     {if $settings.General.checkout_redirect != "Y"}
                     <a href="{"checkout.checkout"|fn_url}" rel="nofollow" class="btn btn-success pull-right">{__("checkout")}</a>
                     {/if}
                 </div>
-            </li>
+            </div>
         {/if}
         {/hook}
-    </ul>
+    </div>
 <!--cart_status_{$dropdown_id}--></div>
 {/hook}

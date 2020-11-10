@@ -164,13 +164,13 @@
                         if (id == c_id) {
                             $('.cm-thumbnails-mini', container).removeClass('active');
                             jelm.addClass('active');
-                            $(this).removeClass('hidden');
-                            $('div', $(this)).removeClass('hidden');// Special for Flash containers
-                            $('#box_' + id).removeClass('hidden');
+                            $(this).removeClass('d-none');
+                            $('div', $(this)).removeClass('d-none');// Special for Flash containers
+                            $('#box_' + id).removeClass('d-none');
                         } else {
-                            $(this).addClass('hidden');
-                            $('div', $(this)).addClass('hidden'); // Special for Flash containers
-                            $('#box_' + id).addClass('hidden');
+                            $(this).addClass('d-none');
+                            $('div', $(this)).addClass('d-none'); // Special for Flash containers
+                            $('#box_' + id).addClass('d-none');
                         }
                     });
                 }

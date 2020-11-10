@@ -6,23 +6,23 @@
 {else}
     {if $profile_fields.$section}
         {if $address_flag}
-            <div class="panel panel-default">
-                <div class="panel-body">
-                        {if $section == "S"}
-                            <span>{__("shipping_same_as_billing")}</span>
-                        {else}
-                            <span>{__("text_billing_same_with_shipping")}</span>
-                        {/if}
-                    <div class="pull-right">
-                        <label class="radio-inline control-label" for="sw_{$body_id}_suffix_no">
-                            <input class="radio cm-switch-availability cm-switch-visibility" type="radio" name="ship_to_another" value="1" id="sw_{$body_id}_suffix_no" {if $ship_to_another}checked="checked"{/if} />
-                            {__("no")}
-                        </label>
-                        <label class="radio-inline control-label" for="sw_{$body_id}_suffix_yes">
-                            <input class="radio cm-switch-availability cm-switch-inverse cm-switch-visibility" type="radio" name="ship_to_another" value="0" id="sw_{$body_id}_suffix_yes" {if !$ship_to_another}checked="checked"{/if} />
-                            {__("yes")}
-                        </label>
-                    </div>
+            <div class="form-group address-switcher">
+                {if $section == "S"}
+                    <span>{__("shipping_same_as_billing")}</span>
+                {else}
+                    <span>{__("text_billing_same_with_shipping")}</span>
+                {/if}
+                <div class="form-check">
+                    <input class="form-check-input radio cm-switch-availability cm-switch-visibility" type="radio" name="ship_to_another" value="1" id="sw_{$body_id}_suffix_no" {if $ship_to_another}checked="checked"{/if} />
+                    <label class="form-check-label radio-inline control-label" for="sw_{$body_id}_suffix_no">
+                        {__("no")}
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input radio cm-switch-availability cm-switch-inverse cm-switch-visibility" type="radio" name="ship_to_another" value="0" id="sw_{$body_id}_suffix_yes" {if !$ship_to_another}checked="checked"{/if} />
+                    <label class="form-check-label radio-inline control-label" for="sw_{$body_id}_suffix_yes">
+                        {__("yes")}
+                    </label>
                 </div>
             </div>
         {else}
@@ -72,8 +72,8 @@
         {/if}
 
         {hook name="profiles:profile_fields"}
-        <div class="form-group {$field.class}">
-            {if $pref_field_name != $field.description || $field.required == "Y"}
+            <div class="{$field.class}{if $field.field_type == "C"} form-check checkbox__wrapper{else} form-group{/if}">
+            {if ($pref_field_name != $field.description || $field.required == "Y") && $field.field_type != "C"}
                 <label for="{$id_prefix}elm_{$field.field_id}" class="cm-profile-field {if $field.required == "Y"}cm-required{/if}{if $field.field_type == "P"} cm-phone{/if}{if $field.field_type == "Z"} cm-zipcode{/if}{if $field.field_type == "E"} cm-email{/if} {if $field.field_type == "Z"}{if $section == "S"}cm-location-shipping{else}cm-location-billing{/if}{/if}">{$field.description}</label>
             {/if}
 
@@ -104,7 +104,9 @@
             {elseif $field.field_type == "C"}  {* Checkbox *}
                 <input type="hidden" name="{$data_name}[{$data_id}]" value="N" {if !$skip_field}{$disabled_param nofilter}{/if} />
                 <input type="checkbox" id="{$id_prefix}elm_{$field.field_id}" name="{$data_name}[{$data_id}]" value="Y" {if $value == "Y"}checked="checked"{/if} class="checkbox {if !$skip_field}{$_class}{else}cm-skip-avail-switch{/if}" {if !$skip_field}{$disabled_param nofilter}{/if} />
-
+                {if $pref_field_name != $field.description || $field.required == "Y"}
+                    <label for="{$id_prefix}elm_{$field.field_id}" class="cm-profile-field {if $field.required == "Y"}cm-required{/if}{if $field.field_type == "P"} cm-phone{/if}{if $field.field_type == "Z"} cm-zipcode{/if}{if $field.field_type == "E"} cm-email{/if} {if $field.field_type == "Z"}{if $section == "S"}cm-location-shipping{else}cm-location-billing{/if}{/if}">{$field.description}</label>
+                {/if}
             {elseif $field.field_type == "T"}  {* Textarea *}
                 <textarea {if $field.autocomplete_type}x-autocompletetype="{$field.autocomplete_type}"{/if} class="form-control {if !$skip_field}{$_class}{else}cm-skip-avail-switch{/if}" id="{$id_prefix}elm_{$field.field_id}" name="{$data_name}[{$data_id}]" cols="32" rows="3" {if !$skip_field}{$disabled_param nofilter}{/if}>{$value}</textarea>
             

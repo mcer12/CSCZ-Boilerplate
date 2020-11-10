@@ -15,18 +15,19 @@
 {if !$cart}
     {$cart = $smarty.session.cart}
 {/if}
+
 {if $location != "sidebox" && $location != "popup"}
 
-<div id="est_box{$id_suffix}" class="panel panel-default">
-    <div class="panel-header">
-    <h3>{__("calculate_shipping_cost")}</h3>
+<div id="est_box{$id_suffix}">
+    <div class="ty-estimation-box">
+    <h3 class="ty-subheader">{__("calculate_shipping_cost")}</h3>
 {/if}
+        {assign var="shipping_estimation_block_id" value="shipping_estimation{if $location == "sidebox"}_sidebox{/if}`$id_suffix`"}
 
-{assign var="shipping_estimation_block_id" value="shipping_estimation{if $location == "sidebox"}_sidebox{/if}`$id_suffix`"}
-    
-        <div class="panel-body" id="shipping_estimation{if $location == "sidebox"}_sidebox{/if}{$id_suffix}">
+        <div id="{$shipping_estimation_block_id}">
 
-            {$states = 1|fn_get_all_states}
+            {$countries = fn_get_simple_countries(true)}
+            {$states = fn_get_all_states(true)}
             {if !$smarty.capture.states_built}
                 {include file="views/profiles/components/profiles_scripts.tpl" states=$states}
                 {capture name="states_built"}Y{/capture}
@@ -38,58 +39,62 @@
                 <input type="hidden" name="result_ids" value="{$shipping_estimation_block_id},shipping_estimation_buttons,shipping_estimation_rates{$id_suffix}" />
 
                 {hook name="checkout:shipping_estimation_fields"}
-                <div class="form-group">
-                    <label for="{$prefix}elm_country{$id_suffix}" class="control-label">{__("country")}</label>
-                    <select id="{$prefix}elm_country{$id_suffix}" class="cm-country cm-location-estimation{$class_suffix} form-control" name="customer_location[country]">
-                        <option value="">- {__("select_country")} -</option>
-                        {assign var="countries" value=1|fn_get_simple_countries}
-                        {foreach from=$countries item="country" key="code"}
-                        <option value="{$code}" {if ($cart.user_data.s_country == $code) || (!$cart.user_data.s_country && $code == $settings.General.default_country)}selected="selected"{/if}>{$country}</option>
-                        {/foreach}
-                    </select>
-                </div>
-
                 {$_state = $cart.user_data.s_state}
+                {$_country = $cart.user_data.s_country}
 
-                {if $_state|fn_is_empty}
-                    {$_state = $settings.General.default_state}
+                {if !isset($cart.user_data.s_country)}
+                    {$_country = $settings.Checkout.default_country}
                 {/if}
 
+                {if !isset($cart.user_data.s_state) && $_country == $settings.Checkout.default_country}
+                    {$_state = $settings.Checkout.default_state}
+                {/if}
 
-                <div class="form-group">
-                    <label for="{$prefix}elm_state{$id_suffix}" class="control-label">{__("state")}</label>
-                    <select class="cm-state cm-location-estimation{$class_suffix} {if !$states[$cart.user_data.s_country]}hidden{/if} form-control" id="{$prefix}elm_state{$id_suffix}" name="customer_location[state]">
-                        <option value="">- {__("select_state")} -</option>
-                        {foreach $states[$cart.user_data.s_country] as $state}
-                            <option value="{$state.code}" {if $state.code == $_state}selected="selected"{/if}>{$state.state}</option>
-                        {foreachelse}
-                            <option label="" value="">- {__("select_state")} -</option>
+                <div class="ty-control-group">
+                    <label class="ty-control-group__label cm-required" for="{$prefix}elm_country{$id_suffix}">{__("country")}</label>
+                    <select id="{$prefix}elm_country{$id_suffix}" class="cm-country cm-location-estimation{$class_suffix} ty-input-text-medium" name="customer_location[country]">
+                        <option value="">- {__("select_country")} -</option>
+                        {foreach $countries as $code => $country}
+                            <option value="{$code}" {if $_country == $code}selected="selected"{/if}>{$country}</option>
                         {/foreach}
                     </select>
-                    <input type="text" class="cm-state cm-location-estimation{$class_suffix}  {if $states[$cart.user_data.s_country]}hidden{/if} form-control" id="{$prefix}elm_state{$id_suffix}_d" name="customer_location[state]" size="20" maxlength="64" value="{$_state}" {if $states[$cart.user_data.s_country]}disabled="disabled"{/if} />
                 </div>
 
-                <div class="form-group">
-                    <label for="{$prefix}elm_city{$id_suffix}" class="control-label">{__("city")}</label>
-                    <input type="text" class="form-control" id="{$prefix}elm_city{$id_suffix}" name="customer_location[city]" size="32" value="{$cart.user_data.s_city}" />
+                <div class="ty-control-group">
+                    <label class="ty-control-group__label" for="{$prefix}elm_state{$id_suffix}">{__("state")}</label>
+                    <select class="cm-state cm-location-estimation{$class_suffix} {if !$states[$_country]}hidden{/if} ty-input-text-medium" id="{$prefix}elm_state{$id_suffix}" name="customer_location[state]">
+                        <option value="">- {__("select_state")} -</option>
+                        {foreach $states[$_country] as $state}
+                            <option value="{$state.code}" {if $state.code == $_state}selected="selected"{/if}>{$state.state}</option>
+                        {/foreach}
+                    </select>
+                    <input type="text" class="cm-state cm-location-estimation{$class_suffix} ty-input-text-medium {if $states[$cart.user_data.s_country]}hidden{/if}" id="{$prefix}elm_state{$id_suffix}_d" name="customer_location[state]" size="20" maxlength="64" value="{$_state}" {if $states[$cart.user_data.s_country]}disabled="disabled"{/if} />
                 </div>
 
-                <div class="form-group">
-                    <label for="{$prefix}elm_zipcode{$id_suffix}" class="control-label">{__("zip_postal_code")}</label>
-                    <input type="text" class="form-control" id="{$prefix}elm_zipcode{$id_suffix}" name="customer_location[zipcode]" size="20" value="{$cart.user_data.s_zipcode}" />
+                <div class="ty-control-group">
+                    <label class="ty-control-group__label" for="{$prefix}elm_city{$id_suffix}">{__("city")}</label>
+                    <input type="text" class="ty-input-text-medium" id="{$prefix}elm_city{$id_suffix}" name="customer_location[city]" size="32" value="{$cart.user_data.s_city}" />
+                </div>
+
+                <div class="ty-control-group">
+                    <label class="ty-control-group__label" for="{$prefix}elm_zipcode{$id_suffix}">{__("zip_postal_code")}</label>
+                    <input type="text" class="ty-input-text-medium" id="{$prefix}elm_zipcode{$id_suffix}" name="customer_location[zipcode]" size="20" value="{$cart.user_data.s_zipcode}" />
                 </div>
                 {/hook}
-                
+
                 <div class="{$buttons_class}">
-                    {include file="common/button.tpl" text=__("get_rates") name="dispatch[checkout.shipping_estimation]" id="but_get_rates_{$location}" as="link"}
+                    {include file="buttons/button.tpl" but_text=__("get_rates") but_name="dispatch[checkout.shipping_estimation.get_rates]" but_role="text" but_id="but_get_rates_{$location}"}
                 </div>
 
             </form>
+
             {if $runtime.mode == "shipping_estimation" || $smarty.request.show_shippings == "Y"}
                 {if !$cart.shipping_failed && !$cart.company_shipping_failed}
                     {if $location == "popup"}
-                        <h4>{__("select_shipping_method")}</h4>
+                        <div class="ty-estimation__title">{__("select_shipping_method")}</div>
                     {/if}
+
+                    <div id="shipping_estimation_rates{$id_suffix}">
                     <form class="cm-ajax" name="{$prefix}select_shipping_form{$id_suffix}" action="{""|fn_url}" method="post">
                     <input type="hidden" name="redirect_mode" value="cart" />
                     <input type="hidden" name="result_ids" value="checkout_totals" />
@@ -98,11 +103,14 @@
                     {hook name="checkout:shipping_estimation"}
 
                     {foreach from=$product_groups key=group_key item=group name="s"}
-                        <p>
-                        <strong>{__("vendor")}:&nbsp;</strong>{$group.name|default:__("none")}
-                        </p>
+                        {* Group name *}
                         {if !"ULTIMATE"|fn_allowed_for || $product_groups|count > 1}
-                            <ul class="list-unstyled">
+                            <p>
+                                <strong>{$group.name|default:__("none")}</strong>
+                            </p>
+                        {/if}
+                        {if !"ULTIMATE"|fn_allowed_for || $product_groups|count > 1}
+                            <ul>
                             {foreach from=$group.products item="product"}
                                 <li>
                                     {if $product.product}
@@ -118,52 +126,53 @@
                         {if $group.shippings && !$group.all_edp_free_shipping && !$group.shipping_no_required}
                             {foreach from=$group.shippings item="shipping" name="estimate_group_shipping"}
                                 {if !$show_only_first_shipping || $smarty.foreach.estimate_group_shipping.first}
-                                
+
                                     {if $cart.chosen_shipping.$group_key == $shipping.shipping_id}
                                         {assign var="checked" value="checked=\"checked\""}
                                     {else}
                                         {assign var="checked" value=""}
                                     {/if}
 
-                                    {if $shipping.delivery_time}
-                                        {assign var="delivery_time" value="(`$shipping.delivery_time`)"}
+                                    {if $shipping.delivery_time || $shipping.service_delivery_time}
+                                        {assign var="delivery_time" value="(`$shipping.service_delivery_time|default:$shipping.delivery_time`)"}
                                     {else}
                                         {assign var="delivery_time" value=""}
                                     {/if}
 
                                     {hook name="checkout:shipping_estimation_method"}
-                                    {if $shipping.rate}
-                                        {capture assign="rate"}{include file="common/price.tpl" value=$shipping.rate}{/capture}
-                                        {if $shipping.inc_tax}
-                                            {assign var="rate" value="`$rate` ("}
-                                            {if $shipping.taxed_price && $shipping.taxed_price != $shipping.rate}
-                                                {capture assign="tax"}{include file="common/price.tpl" value=$shipping.taxed_price }{/capture}
-                                                {assign var="rate" value="`$rate` (`$tax` "}
+                                        {hook name="checkout:shipping_rate"}
+                                            {if $shipping.rate}
+                                                {capture assign="rate"}{include file="common/price.tpl" value=$shipping.rate}{/capture}
+                                                {if $shipping.inc_tax}
+                                                    {assign var="rate" value="`$rate` ("}
+                                                    {if $shipping.taxed_price && $shipping.taxed_price != $shipping.rate}
+                                                        {capture assign="tax"}{include file="common/price.tpl" value=$shipping.taxed_price class="ty-nowrap"}{/capture}
+                                                        {assign var="rate" value="`$rate``$tax` "}
+                                                    {/if}
+                                                    {assign var="inc_tax_lang" value=__('inc_tax')}
+                                                    {assign var="rate" value="`$rate``$inc_tax_lang`)"}
+                                                {/if}
+                                            {elseif fn_is_lang_var_exists("free_shipping")}
+                                                {assign var="rate" value=__("free_shipping") }
+                                            {else}
+                                                {assign var="rate" value="" }
                                             {/if}
-                                            {assign var="inc_tax_lang" value=__('inc_tax')}
-                                            {assign var="rate" value="`$rate``$inc_tax_lang`)"}
-                                        {/if}
-                                    {else}
-                                        {assign var="rate" value=__("free_shipping")}
-                                    {/if}
-
-                                    <div class="radio">
-                                        <label for="sh_{$group_key}_{$shipping.shipping_id}{$id_suffix}">
-                                            <input
-                                                type="radio"
-                                                id="sh_{$group_key}_{$shipping.shipping_id}{$id_suffix}"
-                                                name="shipping_ids[{$group_key}]"
-                                                value="{$shipping.shipping_id}"
-                                                onclick="fn_calculate_total_shipping(
-                                                {if $location=='sidebox'}
-                                                'shipping_estimation_sidebox{$id_suffix}'
-                                                {/if});"
-                                                {$checked}
-                                            />
-                                            {$shipping.shipping} {$delivery_time}
-                                            {if $rate !== "_free_shipping"} {$rate nofilter}{/if}
-                                        </label>
-                                    </div>
+                                        {/hook}
+                                    <p>
+                                        <input
+                                            type="radio"
+                                            class="ty-valign"
+                                            id="sh_{$group_key}_{$shipping.shipping_id}{$id_suffix}"
+                                            name="shipping_ids[{$group_key}]"
+                                            value="{$shipping.shipping_id}"
+                                            onclick="fn_calculate_total_shipping('{$shipping_estimation_block_id}');"
+                                            {$checked} />
+                                            <label for="sh_{$group_key}_{$shipping.shipping_id}{$id_suffix}"
+                                                class="ty-valign" id="shipping_label_{$shipping_estimation_block_id}_{$group_key}_{$shipping.shipping_id}{$id_suffix}">
+                                                {$shipping.shipping} {$delivery_time}
+                                                {if $rate} {$rate nofilter}{/if}
+                                            <!--shipping_label_{$shipping_estimation_block_id}_{$group_key}_{$shipping.shipping_id}{$id_suffix}--></label>
+                                    </p>
                                     {/hook}
                                 {/if}
                             {/foreach}
@@ -179,22 +188,27 @@
                         {/if}
 
                     {/foreach}
+
                     <div id="shipping_estimation_total{$id_suffix}">
-                        <p><strong>{__("total")}:</strong>&nbsp;{include file="common/price.tpl" value=$cart.display_shipping_cost }</p>
+                    <p><strong>{__("total")}:</strong>&nbsp;{include file="common/price.tpl" value=$cart.display_shipping_cost class="ty-price"}</p>
                     <!--shipping_estimation_total{$id_suffix}--></div>
+
                     {/hook}
 
                     <div class="{$buttons_class}">
-                        {include file="common/button.tpl" text=__("select") as="link" name="dispatch[checkout.update_shipping]" id="but_select_shipping" meta="cm-dialog-closer"}
+                        {include file="buttons/button.tpl" but_text=__("select") but_role="text" but_name="dispatch[checkout.update_shipping]" but_id="but_select_shipping" but_meta="cm-dialog-closer"}
                     </div>
 
                     </form>
+                    <!--shipping_estimation_rates{$id_suffix}--></div>
                 {else}
-                    {__("text_no_shipping_methods")}
+                    <p class="ty-error-text">
+                        {__("text_no_shipping_methods")}
+                    </p>
                 {/if}
 
             {/if}
-        <!--shipping_estimation{if $location == "sidebox"}_sidebox{/if}{$id_suffix}--></div>
+        <!--{$shipping_estimation_block_id}--></div>
 
 {if $location != "sidebox" && $location != "popup"}
     </div>
@@ -202,13 +216,13 @@
 {/if}
 
 {if $location == "popup"}
-<div class="panel-footer col-lg-12 buttons-container" id="shipping_estimation_buttons">
+<div class="ty-estimation-buttons buttons-container" id="shipping_estimation_buttons">
     {if $runtime.mode == "shipping_estimation" || $smarty.request.show_shippings == "Y"}
-        {include file="common/button.tpl" text=__("recalculate_rates") external_click_id="but_get_rates_{$location}" meta="btn-default cm-external-click" as="link"}
-        <br>
-        {include file="common/button.tpl" text=__("select_shipping_method") external_click_id="but_select_shipping" meta="btn-default cm-external-click cm-dialog-closer" as="link"}
+        {include file="buttons/button.tpl" but_text=__("recalculate_rates") but_external_click_id="but_get_rates_{$location}" but_role="text" but_meta="ty-btn__secondary cm-external-click ty-float-right ty-estimation-buttons__rate"}
+
+        {include file="buttons/button.tpl" but_text=__("select_shipping_method") but_external_click_id="but_select_shipping" but_meta="ty-btn__secondary cm-external-click cm-dialog-closer"}
     {else}
-        {include file="common/button.tpl" text=__("get_rates") external_click_id="but_get_rates_{$location}" meta="btn-default cm-external-click" as="link"}
+        {include file="buttons/button.tpl" but_text=__("get_rates") but_external_click_id="but_get_rates_{$location}" but_meta="ty-btn__secondary cm-external-click"}
     {/if}
 <!--shipping_estimation_buttons--></div>
 {/if}

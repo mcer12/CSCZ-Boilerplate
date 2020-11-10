@@ -17,11 +17,10 @@
         {/if}
         <div class="input-group">
             <input type="text" class="form-control cm-hint" placeholder="{$search.q}" name="q" value="{$search.q}" id="search_input{$smarty.capture.search_input_id}" title="{$search_title}" />
-            {if $settings.General.search_objects}
-                {include file="common/go.tpl" name="search.results" alt=__("search") icon="glyphicon-search fa fa-search"}
-            {else}
-                {include file="common/go.tpl" name="products.search" alt=__("search") icon="glyphicon-search fa fa-search"}
-            {/if}
+            <div class="input-group-append">
+                {include file="common/button.tpl" name="search.results" text=__("search") meta="btn btn-outline-secondary"}
+            </div>
+
         </div>
     {/strip}
     {capture name="search_input_id"}{$block.snapping_id}{/capture}

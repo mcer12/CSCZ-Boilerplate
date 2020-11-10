@@ -2,11 +2,25 @@
 {if !"AJAX_REQUEST"|defined}
     {foreach from=""|fn_get_notifications item="message" key="key"}
         {if $message.type == "I"}
-            <div class="ui-widget-overlay" data-ca-notification-key="{$key}"></div>
-            <div class="cm-notification-content cm-notification-content-extended notification-content-extended{if $message.message_state == "I"} cm-auto-hide{/if}" data-ca-notification-key="{$key}">
-                <h1>{$message.title}<span class="cm-notification-close {if $message.message_state == "S"} cm-notification-close-ajax{/if}"></span></h1>
-                <div class="notification-body-extended">
-                    {$message.message nofilter}
+            <div class="cm-notification-content cm-notification-content-modal modal{if $message.message_state == "I"} cm-auto-hide{/if}" tabindex="-1" role="dialog" data-ca-notification-key="{$key}">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">{$message.title}</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            {$message.message nofilter}
+                        </div>
+                        {*
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary">Save changes</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                        *}
+                    </div>
                 </div>
             </div>
         {elseif $message.type == "O"}

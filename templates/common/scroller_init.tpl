@@ -1,10 +1,7 @@
-{script src="js/lib/owlcarousel/owl.carousel.min.js"}
 <script type="text/javascript">
 (function(_, $) {
     $.ceEvent('on', 'ce.commoninit', function(context) {
         var elm = context.find('#scroll_list_{$block.block_id}');
-
-        $('.pull-left:contains(.scroller-list),.pull-right:contains(.scroller-list)').css('width', '100%');
 
         var item = {$block.properties.item_quantity|default:5},
             // default setting of carousel
@@ -28,7 +25,7 @@
             tablet = [768, itemsTablet],
             mobile = [479, 1];
 
-        {if $block.properties.outside_navigation == "Y"}
+        {*if $block.properties.outside_navigation == "Y"}
         function outsideNav () {
             if(this.options.items >= this.itemsAmount){
                 $("#owl_outside_nav_{$block.block_id}").hide();
@@ -36,49 +33,60 @@
                 $("#owl_outside_nav_{$block.block_id}").show();
             }
         }
-        {/if}
+        {/if*}
 
         if (elm.length) {
-            elm.owlCarousel({
-                direction: '{$language_direction}',
-                items: item,
-                itemsDesktop: desktop,
-                itemsDesktopSmall: desktopSmall,
-                itemsTablet: tablet,
-                itemsMobile: mobile,
+
+            var mySwiper = new Swiper ('#scroll_list_{$block.block_id}', {
+                // Optional parameters
+                //direction: 'vertical',
+                slidesPerView: 4,
+                spaceBetween: 20,
+                speed: {$block.properties.speed|default:400},
+                lazy: {
+                    loadOnTransitionStart: true
+                },
+                //loop: true,
+                //loopedSlides: 4,
+                autoplay: {if $block.properties.not_scroll_automatically != "Y" && $block.properties.pause_delay && $block.properties.pause_delay > 0}{ delay: {$block.properties.pause_delay * 1000} } {else}false{/if},
+
+                breakpoints: {
+                    // when window width is >= 320px
+                    320: {
+                        slidesPerView: 2,
+                    },
+                    768: {
+                        slidesPerView: itemsTablet,
+                    },
+                    992: {
+                        slidesPerView: itemsDesktopSmall,
+                    },
+                    1200: {
+                        slidesPerView: itemsDesktop,
+                    }
+                },
+                // If we need pagination
                 {if $block.properties.scroll_per_page == "Y"}
-                scrollPerPage: true,
+                pagination: {
+                    el: '#scroll_list_{$block.block_id} .swiper-pagination',
+                    clickable: true
+                },
                 {/if}
-                {if $block.properties.not_scroll_automatically == "Y"}
-                autoPlay: false,
-                {else}
-                autoPlay: '{$block.properties.pause_delay * 1000|default:0}',
+                {if $block.properties.outside_navigation == "Y"}
+                navigation: {
+                    nextEl: '#scroll_list_{$block.block_id} .swiper-button-next',
+                    prevEl: '#scroll_list_{$block.block_id} .swiper-button-prev',
+                },
                 {/if}
-                lazyLoad: true,
-                slideSpeed: {$block.properties.speed|default:400},
-                stopOnHover: true,
-                {if $block.properties.outside_navigation == "N"}
-                navigation: true,
-                navigationText: ['{__("prev_page")}', '{__("next")}'],
-                {/if}
-                pagination: false,
-            {if $block.properties.outside_navigation == "Y"}
-                afterInit: outsideNav,
-                afterUpdate : outsideNav
+                {*
+                scrollbar: {
+                    el: '#scroll_list_{$block.block_id} .swiper-scrollbar',
+                },
+                *}
             });
-
-              $('{$prev_selector}').click(function(){
-                elm.trigger('owl.prev');
-              });
-              $('{$next_selector}').click(function(){
-                elm.trigger('owl.next');
-              });
-
-            {else}
-            });
-            {/if}
 
         }
+
     });
 }(Tygh, Tygh.$));
 </script>

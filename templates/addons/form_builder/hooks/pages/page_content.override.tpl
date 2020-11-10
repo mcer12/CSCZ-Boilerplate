@@ -14,9 +14,7 @@
     {else}
 
     {if $page.description}
-        <blockquote class="form-builder-description">
-            {$page.description nofilter}
-        </blockquote>
+        {$page.description nofilter}
     {/if}
 
 <div class="form-builder row">

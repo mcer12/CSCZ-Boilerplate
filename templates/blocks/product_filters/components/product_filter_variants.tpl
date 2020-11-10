@@ -1,10 +1,10 @@
-<ul class="product-filter list-unstyled {if $collapse}hidden{/if}" id="content_{$filter_uid}">
+<ul class="product-filter list-unstyled {if $collapse}d-none{/if}" id="content_{$filter_uid}">
 
     {if $filter.display_count && $filter.variants|count > $filter.display_count}
     <li>
         {script src="js/tygh/filter_table.js"}
         <div class="form-group">
-            <i class="product-filter-search-icon glyphicon glyphicon-remove-sign fa fa-times-circle hidden" id="elm_search_clear_{$filter_uid}" title="{__("clear")}"></i>
+            <i class="product-filter-search-icon glyphicon glyphicon-remove-sign fa fa-times-circle d-none" id="elm_search_clear_{$filter_uid}" title="{__("clear")}"></i>
             <input type="text" placeholder="{__("search")}" class="cm-autocomplete-off form-control" name="q" id="elm_search_{$filter_uid}" value="" />
         </div>
     </li>
@@ -29,7 +29,7 @@
                 </li>
                 {/foreach}
             </ul>
-            <p id="elm_search_empty_{$filter_uid}" class="product-filters-no-items-found hidden">{__("no_items_found")}</p>
+            <p id="elm_search_empty_{$filter_uid}" class="product-filters-no-items-found d-none">{__("no_items_found")}</p>
         </li>
     {/if}
 </ul>

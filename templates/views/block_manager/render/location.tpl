@@ -1,14 +1,18 @@
 
-{if $containers.top_panel}
-<section class="top-panel">
-    {$containers.top_panel nofilter}
-</section>
-{/if}
+{if $containers.top_panel || $containers.header}
+    <div class="header-container">
+        {if $containers.top_panel}
+            <section class="top-panel">
+                {$containers.top_panel nofilter}
+            </section>
+        {/if}
 
-{if $containers.header}
-<header class="header">
-    {$containers.header nofilter}
-</header>
+        {if $containers.header}
+            <header class="header">
+                {$containers.header nofilter}
+            </header>
+        {/if}
+    </div>
 {/if}
 
 {if $containers.content}

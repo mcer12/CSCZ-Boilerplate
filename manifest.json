@@ -1,9 +1,9 @@
 {
-    "title": "CS-Cart boilerplate",
-    "description": "CS-Cart boilerplate Twitter Bootstrap 3.3.5 theme",
+    "title": "CSCZ Boilerplate",
+    "description": "CS-Cart.cz development theme",
     "logo": "media/images/logos/main_logo.png",
     "mail": "media/images/logos/main_logo.png",
-    "developer": "Simtech",
+    "developer": "CS-Cart.cz",
     "favicon": "media/images/icons/favicon.ico",
     "EXAMPLE_settings_overrides": {
         "General": {
