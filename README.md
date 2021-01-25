@@ -1,13 +1,21 @@
 # CSCZ-Boilerplate
 ### Our take on (now abandoned) CS-Cart Boilerplate theme
 
+
 Notable differences from original Boilerplate:
+- SUPPORT FOR CURRENT CS-CART VERSIONS
 - Theme uses SCSS instead of LESS
 - Uses NPM + Gulp for precompiling, supports browser Livereload
 - Uses Bootstrap 4 instead of BS3
 - Uses Swiper for banner / product sliders
+- Theme editor support
+- Recaptcha support
+- Supports modern Lite Checkout
 
-This theme is, just like the original Boilerplate, meant for development. The goal is for it to be fully compatible with latest versions of CS-Cart (currently version 4.x). Keep an eye on the repository, there should be a usable release soon together with an example child theme.
+Not implemented (PR welcome):
+- Quick view
+
+This theme is, just like the original Boilerplate, meant for development. The goal is for it to be fully compatible with latest versions of CS-Cart (currently version 4.x). Should be working fine now, though still in beta.
 
 ## Installation
 1. Copy **cscz-boilerplate** and **example_child_theme** directories to your project's design/themes path. 
