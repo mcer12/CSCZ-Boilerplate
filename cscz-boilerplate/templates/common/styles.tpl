@@ -22,7 +22,6 @@
     {style src="../../responsive/css/tygh/design_mode.css"}
 {/if}
 
-    TEST
 {* Theme editor mode *}
 {if $runtime.customization_mode.theme_editor || $smarty.session.customize_theme}
     {style src="../../responsive/css/tygh/theme_editor.css"}
