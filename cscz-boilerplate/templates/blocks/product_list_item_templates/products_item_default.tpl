@@ -14,7 +14,7 @@
         {/if*}
     </div>
     <div class="product-item__name">
-        <span>{$product.product|zfn_replace_index nofilter}</span>
+        <span>{$product.product nofilter}</span>
     </div>
     {*
     <div class="product-item__name">
