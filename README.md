@@ -1,6 +1,9 @@
 # CSCZ-Boilerplate
 ### Our take on (now abandoned) CS-Cart Boilerplate theme
 
+This is a skeleton theme for developing custom shops from ground up. No more hassle with the Responsive theme!
+
+**Please note that it's still work in progress and bugs can occur. Feel free to open issues to report bugs or contribute with a PR.**
 
 Notable differences from original Boilerplate:
 - SUPPORT FOR CURRENT CS-CART VERSIONS
@@ -15,7 +18,7 @@ Notable differences from original Boilerplate:
 Not implemented (PR welcome):
 - Quick view
 
-This theme is, just like the original Boilerplate, meant for development. The goal is for it to be fully compatible with latest versions of CS-Cart (currently version 4.x). Should be working fine now, though still in beta.
+This theme is, just like the original Boilerplate, meant for development. The goal is for it to be fully compatible with latest versions of CS-Cart (currently version 4.x).
 
 ## Installation
 1. Copy **cscz-boilerplate** and **example_child_theme** directories to your project's design/themes path. 
