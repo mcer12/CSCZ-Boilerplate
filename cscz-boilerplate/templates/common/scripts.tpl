@@ -1,20 +1,33 @@
+{$jquery_version = "3.5.1"}
+{$jquery_migrate_version = "3.3.0"}
+
 {if !$config.tweaks.dev_js}
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-{$jquery_version}.min.js"
+            integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+            crossorigin="anonymous"
+            data-no-defer
+    ></script>
+    <script src="https://code.jquery.com/jquery-migrate-{$jquery_migrate_version}.min.js"
+            integrity="sha256-wZ3vNXakH9k4P00fNGAlbN0PkpKSyhRa76IFy4V1PYE="
+            crossorigin="anonymous"
+            data-no-defer
+    ></script>
+    <script data-no-defer>
+        if (!window.jQuery) {
+            document.write('{script src="js/lib/jquery/jquery-{$jquery_version}.min.js" no-defer=true escape=true}');
+            document.write('{script src="js/lib/jquery/jquery-migrate-$jquery_migrate_version}.min.js" no-defer=true escape=true}');
+        }
+    </script>
 {/if}
 
 {scripts}
-{if $config.tweaks.dev_js}
-    {script src="js/lib/jquery/jquery-3.3.1.min.js"}
-    {script src="js/lib/jquery/jquery-migrate-3.0.1.min.js"}
-{/if}
+
+    {if $config.tweaks.dev_js}
+        {script src="js/lib/jquery/jquery-{$jquery_version}.min.js"}
+        {script src="js/lib/jquery/jquery-migrate-{$jquery_migrate_version}.min.js"}
+    {/if}
 
     {script src="js/lib/jqueryui/jquery-ui.custom.min.js" no-defer=true}
-    {script src="design/themes/`$runtime.layout.theme_name`/js/lazyload.min.js" no-defer=true}
-
-    {*
-       When working with this code, please note that we will be modifying or removing it in the
-       future versions of the developer theme.
-    *}
     {script src="js/lib/modernizr/modernizr.custom.js"}
     {script src="js/tygh/core.js"}
     {script src="js/tygh/ajax.js"}
@@ -37,6 +50,7 @@
 
 {script src="design/themes/`$runtime.layout.theme_name`/js/bootstrap.bundle.min.js"}
 {script src="design/themes/`$runtime.layout.theme_name`/js/swiper.min.js"}
+{script src="design/themes/`$runtime.layout.theme_name`/js/lazyload.min.js" no-defer=true}
 {script src="design/themes/`$runtime.layout.theme_name`/js/scripts.js"}
 
     <script type="text/javascript">
@@ -152,15 +166,15 @@
     </script>
 
 
-    {*
-    {script src="js/lib/maskedinput/jquery.maskedinput.min.js"}
 
-    {script src="js/lib/inputmask/jquery.inputmask.min.js"}
-    {script src="js/lib/jquery-bind-first/jquery.bind-first-0.2.3.js"}
-    {script src="js/lib/inputmask-multi/jquery.inputmask-multi.js"}
+{script src="js/lib/maskedinput/jquery.maskedinput.min.js"}
 
-    {script src="js/tygh/phone_mask.js"}
-    *}
+{script src="js/lib/inputmask/jquery.inputmask.min.js"}
+{script src="js/lib/jquery-bind-first/jquery.bind-first-0.2.3.js"}
+{script src="js/lib/inputmask-multi/jquery.inputmask-multi.js"}
+
+{script src="js/tygh/phone_mask.js"}
+
 
 {hook name="index:scripts"}
 {/hook}

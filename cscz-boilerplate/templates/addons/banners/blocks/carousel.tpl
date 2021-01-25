@@ -18,12 +18,14 @@
                 </div>
             {/foreach}
         </div>
-        <!-- If we need pagination -->
+        {if $block.properties.navigation == "D" || $block.properties.navigation == "P"}
         <div class="swiper-pagination"></div>
+        {/if}
 
-        <!-- If we need navigation buttons -->
+        {if $block.properties.navigation == "A" || $block.properties.navigation == "P"}
         <div class="swiper-button-prev"></div>
         <div class="swiper-button-next"></div>
+        {/if}
 
         {*
         <!-- If we need scrollbar -->
@@ -41,19 +43,21 @@
             spaceBetween: 30,
             loop: true,
             autoplay: {if $block.properties.delay && $block.properties.delay > 0}{ delay: {$block.properties.delay * 1000} } {else}false{/if},
-
-            // If we need pagination
+            {if $block.properties.navigation == "D" || $block.properties.navigation == "P"}
             pagination: {
                 el: '#slider_{$block.snapping_id} .swiper-pagination',
                 clickable: true
             },
+            {/if}
+            {if $block.properties.navigation == "A" || $block.properties.navigation == "P"}
             navigation: {
                 nextEl: '#slider_{$block.snapping_id} .swiper-button-next',
                 prevEl: '#slider_{$block.snapping_id} .swiper-button-prev',
             },
+            {/if}
             {*
             scrollbar: {
-                el: '#banner_slider_{$block.snapping_id} .swiper-scrollbar',
+              el: '#banner_slider_{$block.snapping_id} .swiper-scrollbar',
             },
             *}
         });

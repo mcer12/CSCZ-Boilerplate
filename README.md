@@ -21,8 +21,9 @@ This theme is, just like the original Boilerplate, meant for development. The go
   ```
 6. Next time you will only need to run gulp to start watching changes:
   ```bash
+  cd design/themes/example_child_theme
   gulp
   ```
 
 ## Copyright and License
-Licensed under the MIT license just like original boilerplate.
+Licensed under the MIT license just like the original CS-Cart Boilerplate.

@@ -1,76 +1,92 @@
-{script src="js/lib/owlcarousel/owl.carousel.min.js"}
 <script type="text/javascript">
-(function(_, $) {
-    $.ceEvent('on', 'ce.commoninit', function(context) {
-        var elm = context.find('#scroll_list_{$block.block_id}');
+    (function(_, $) {
+        $.ceEvent('on', 'ce.commoninit', function(context) {
+            var elm = context.find('#scroll_list_{$block.block_id}');
 
-        var item = {$block.properties.item_quantity|default:3},
-            // default setting of carousel
-            itemsDesktop = 3,
-            itemsDesktopSmall = 3;
+            var item = {$block.properties.item_quantity|default:5},
+                // default setting of carousel
+                itemsDesktop = 4,
+                itemsDesktopSmall = 3;
             itemsTablet = 2;
 
-        if (item > 3) {
-            itemsDesktop = item;
-            itemsDesktopSmall = item - 1;
-            itemsTablet = item - 2;
-        } else if (item == 1) {
-            itemsDesktop = itemsDesktopSmall = itemsTablet = 1;
-        } else {
-            itemsDesktop = item;
-            itemsDesktopSmall = itemsTablet = item - 1;
-        }
-
-        {if $block.properties.outside_navigation == "Y"}
-        function outsideNav () {
-            if(this.options.items >= this.itemsAmount){
-                $("#owl_outside_nav_{$block.block_id}").hide();
+            if (item > 3) {
+                itemsDesktop = item;
+                itemsDesktopSmall = item - 1;
+                itemsTablet = item - 2;
+            } else if (item == 1) {
+                itemsDesktop = itemsDesktopSmall = itemsTablet = 1;
             } else {
-                $("#owl_outside_nav_{$block.block_id}").show();
+                itemsDesktop = item;
+                itemsDesktopSmall = itemsTablet = item - 1;
             }
-        }
-        {/if}
 
-        if (elm.length) {
-            elm.owlCarousel({
-                direction: '{$language_direction}',
-                items: item,
-                itemsDesktop: [1199, itemsDesktop],
-                itemsDesktopSmall: [979, itemsDesktopSmall],
-                itemsTablet: [768, itemsTablet],
-                itemsMobile: [479, 1],
-                {if $block.properties.scroll_per_page == "Y"}
-                scrollPerPage: true,
-                {/if}
-                {if $block.properties.not_scroll_automatically == "Y"}
-                autoPlay: false,
-                {else}
-                autoPlay: '{$block.properties.pause_delay * 1000|default:0}',
-                {/if}
-                slideSpeed: {$block.properties.speed|default:400},
-                stopOnHover: true,
-                {if $block.properties.outside_navigation == "N"}
-                navigation: true,
-                navigationText: ['{__("prev_page")}', '{__("next")}'],
-                {/if}
-                pagination: false,
-            {if $block.properties.outside_navigation == "Y"}
-                afterInit: outsideNav,
-                afterUpdate : outsideNav
-            });
+            var desktop = [1199, itemsDesktop],
+                desktopSmall = [979, itemsDesktopSmall],
+                tablet = [768, itemsTablet],
+                mobile = [479, 1];
 
-              $('{$prev_selector}').click(function(){
-                elm.trigger('owl.prev');
-              });
-              $('{$next_selector}').click(function(){
-                elm.trigger('owl.next');
-              });
+            {*if $block.properties.outside_navigation == "Y"}
+            function outsideNav () {
+                if(this.options.items >= this.itemsAmount){
+                    $("#owl_outside_nav_{$block.block_id}").hide();
+                } else {
+                    $("#owl_outside_nav_{$block.block_id}").show();
+                }
+            }
+            {/if*}
 
-            {else}
-            });
-            {/if}
+            if (elm.length) {
 
-        }
-    });
-}(Tygh, Tygh.$));
+                var mySwiper = new Swiper ('#scroll_list_{$block.block_id}', {
+                    // Optional parameters
+                    //direction: 'vertical',
+                    slidesPerView: {$block.properties.item_quantity|default:4},
+                    spaceBetween: 20,
+                    speed: {$block.properties.speed|default:400},
+                    lazy: {
+                        loadOnTransitionStart: true
+                    },
+                    //loop: true,
+                    //loopedSlides: 4,
+                    autoplay: {if $block.properties.not_scroll_automatically != "Y" && $block.properties.pause_delay && $block.properties.pause_delay > 0}{ delay: {$block.properties.pause_delay * 1000} } {else}false{/if},
+
+                    breakpoints: {
+                        // when window width is >= 320px
+                        320: {
+                            slidesPerView: 2,
+                        },
+                        768: {
+                            slidesPerView: itemsTablet,
+                        },
+                        992: {
+                            slidesPerView: itemsDesktopSmall,
+                        },
+                        1200: {
+                            slidesPerView: itemsDesktop,
+                        }
+                    },
+                    // If we need pagination
+                    {if $block.properties.scroll_per_page == "Y"}
+                    pagination: {
+                        el: '#scroll_list_{$block.block_id} .swiper-pagination',
+                        clickable: true
+                    },
+                    {/if}
+                    {if $block.properties.outside_navigation == "Y"}
+                    navigation: {
+                        nextEl: '#scroll_list_{$block.block_id} .swiper-button-next',
+                        prevEl: '#scroll_list_{$block.block_id} .swiper-button-prev',
+                    },
+                    {/if}
+                    {*
+                    scrollbar: {
+                        el: '#scroll_list_{$block.block_id} .swiper-scrollbar',
+                    },
+                    *}
+                });
+
+            }
+
+        });
+    }(Tygh, Tygh.$));
 </script>

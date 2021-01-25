@@ -1,0 +1,80 @@
+{
+    "general": {
+        "fields": {
+            "test_field": {
+                "description": "theme_editor.test_field",
+                "type": "checkbox",
+                "true": "true",
+                "false": "false"
+            }
+        },
+        "vendor_can_edit": false
+    },
+    "colors": {
+        "fields": {
+            "primary": {
+                "description": "theme_editor.primary_color"
+            },
+            "secondary": {
+                "description": "theme_editor.secondary_color"
+            },
+            "tertiary": {
+                "description": "theme_editor.tertiary_color"
+            },
+            "text": {
+                "description": "theme_editor.text_color"
+            }
+        },
+        "vendor_can_edit": true
+    },
+    "backgrounds": {
+        "fields": {
+            "header_bg": {
+                "description": "theme_editor.header_bg",
+                "properties": {
+                    "color": {
+                        "enable": true,
+                        "match": "header_bg_color"
+                    },
+                    "pattern": false,
+                    "position": false,
+                    "repeat": false,
+                    "attachment": false
+                }
+            },
+            "slider_bg": {
+                "description": "theme_editor.slider_bg",
+                "properties": {
+                    "color": {
+                        "enable": true,
+                        "match": "slider_bg_color"
+                    },
+                    "pattern": false,
+                    "position": false,
+                    "repeat": false,
+                    "attachment": false
+                }
+            },
+            "footer_bg": {
+                "description": "theme_editor.footer_bg",
+                "properties": {
+                    "color": {
+                        "enable": true,
+                        "match": "footer_bg_color"
+                    },
+                    "pattern": false,
+                    "position": false,
+                    "repeat": false,
+                    "attachment": false
+                }
+            }
+        },
+        "vendor_can_edit": true
+    },
+    "css": {
+        "fields": {
+
+        },
+        "vendor_can_edit": true
+    }
+}
