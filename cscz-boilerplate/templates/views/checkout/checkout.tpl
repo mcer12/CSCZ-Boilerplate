@@ -9,12 +9,14 @@
 
 {* login popup *}
 {if !$auth.user_id}
-    <div id="litecheckout_login_block" class="hidden" title="{__("sign_in")}">
-        <div class="ty-login-popup">
-            {include file="views/auth/login_form.tpl"
-                     style="popup"
-                     id="litecheckout_login_block_inner"
-            }
+    <div class="hidden">
+        <div id="litecheckout_login_block" title="{__("sign_in")}">
+            <div class="ty-login-popup">
+                {include file="views/auth/login_form.tpl"
+                style="popup"
+                id="litecheckout_login_block_inner"
+                }
+            </div>
         </div>
     </div>
 {/if}

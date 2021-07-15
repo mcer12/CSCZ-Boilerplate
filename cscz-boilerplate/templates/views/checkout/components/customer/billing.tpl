@@ -4,33 +4,33 @@
     <div class="litecheckout__item" style="width: 100%;">
         {$use_billing_address = $user_data.ship_to_another|default:false}
 
-        <div class="ty-profile-field__switch ty-address-switch clearfix litecheckout__address-switch">
-            <div class="ty-profile-field__switch-label"><label for="sw_billing_address_suffix_no">{__("text_billing_address_is_different_from_shipping")}</label></div>
-            <div class="ty-profile-field__switch-actions">
+        <div class="form-group">
+            <div class="ty-profile-field__switch ty-address-switch litecheckout__address-switch form-check checkbox__wrapper">
                 <input
-                    type="hidden"
-                    value="0"
-                    name="ship_to_another"
-                    data-ca-lite-checkout-field="ship_to_another"
-                    data-ca-lite-checkout-auto-save-on-change="true"
+                        type="hidden"
+                        value="0"
+                        name="ship_to_another"
+                        data-ca-lite-checkout-field="ship_to_another"
+                        data-ca-lite-checkout-auto-save-on-change="true"
                 >
                 <input
-                    type="hidden"
-                    value="0"
-                    name="user_data[ship_to_another]"
-                    data-ca-lite-checkout-field="user_data.ship_to_another"
-                    data-ca-lite-checkout-auto-save-on-change="true"
+                        type="hidden"
+                        value="1"
+                        name="user_data[ship_to_another]"
+                        data-ca-lite-checkout-field="user_data.ship_to_another"
+                        data-ca-lite-checkout-auto-save-on-change="true"
                 >
                 <input
-                    id="sw_billing_address_suffix_no"
-                    type="checkbox"
-                    value="1"
-                    name="user_data[ship_to_another]"
-                    data-ca-lite-checkout-field="user_data.ship_to_another"
-                    data-ca-lite-checkout-auto-save-on-change="true"
-                    {if $use_billing_address}checked="checked"{/if}
-                    class="checkbox cm-switch-availability cm-switch-visibility"
+                        id="sw_billing_address_suffix_no"
+                        type="checkbox"
+                        value="0"
+                        name="user_data[ship_to_another]"
+                        data-ca-lite-checkout-field="user_data.ship_to_another"
+                        data-ca-lite-checkout-auto-save-on-change="true"
+                        {if !$use_billing_address}checked="checked"{/if}
+                        class="checkbox cm-switch-availability cm-switch-visibility cm-switch-inverse"
                 >
+                <label for="sw_billing_address_suffix_no">{__("text_billing_address_is_same_as_shipping")}</label>
             </div>
         </div>
     </div>

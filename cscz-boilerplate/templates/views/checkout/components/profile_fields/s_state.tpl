@@ -3,7 +3,7 @@
 {$country = $user_data.s_country}
 
 {hook name="checkout:location_state"}
-<div class="litecheckout__field litecheckout__field--xsmall cm-field-container"
+<div class="form-group litecheckout__field litecheckout__field--xsmall cm-field-container"
     data-ca-error-message-target-method="append">
     <select data-ca-lite-checkout-field="user_data.s_state"
             class="cm-state cm-location-shipping litecheckout__input litecheckout__input--selectable litecheckout__input--selectable--select"

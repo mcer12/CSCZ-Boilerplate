@@ -5,7 +5,7 @@
 {$country = $user_data.s_country}
 
 {hook name="checkout:location_city"}
-<div class="litecheckout__field litecheckout__field--fill cm-field-container"
+<div class="form-group litecheckout__field litecheckout__field--fill cm-field-container"
     data-ca-error-message-target-method="append">
     <label class="litecheckout__label cm-required" for="litecheckout_city">{__("city")} </label>
     <input type="text"

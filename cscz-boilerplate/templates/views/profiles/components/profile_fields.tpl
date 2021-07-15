@@ -6,6 +6,29 @@
 {else}
     {if $profile_fields.$section}
         {if $address_flag}
+            <div class="form-group">
+                <div class="ty-profile-field__switch address-switcher ty-address-switch form-check checkbox__wrapper">
+                    <input
+                            type="hidden"
+                            value="1"
+                            name="ship_to_another"
+                            data-ca-lite-checkout-field="user_data.ship_to_another"
+                            data-ca-lite-checkout-auto-save-on-change="true"
+                    >
+                    <input
+                            id="sw_{$body_id}_suffix_yes"
+                            type="checkbox"
+                            value="0"
+                            name="ship_to_another"
+                            data-ca-lite-checkout-field="user_data.ship_to_another"
+                            data-ca-lite-checkout-auto-save-on-change="true"
+                            {if !$ship_to_another}checked="checked"{/if}
+                            class="checkbox cm-switch-availability cm-switch-visibility cm-switch-inverse"
+                    >
+                    <label for="sw_{$body_id}_suffix_yes">{__("text_billing_address_is_same_as_shipping")}</label>
+                </div>
+            </div>
+            {*
             <div class="form-group address-switcher">
                 {if $section == "S"}
                     <span>{__("shipping_same_as_billing")}</span>
@@ -25,6 +48,7 @@
                     </label>
                 </div>
             </div>
+            *}
         {else}
             <input type="hidden" name="ship_to_another" value="1" />
         {/if}
